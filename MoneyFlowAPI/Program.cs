@@ -37,39 +37,50 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Configurar CORS para o frontend hospedado
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://127.0.0.1:5500", "http://localhost:5500")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+            "http://127.0.0.1:5500",
+            "http://localhost:5500",
+            "https://moneyflowoficial.somee.com" // Produção
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 
+// Configurar Controllers e JSON
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
+
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Forçar Swagger mesmo em produção
+app.UseSwagger();
+app.UseSwaggerUI();
 
+// Redirecionamento HTTPS (Render usa HTTP interno, mas aceita HTTPS externo)
 app.UseHttpsRedirection();
 
-// Ativar autenticação e CORS
+// CORS e autenticação
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Suporte à porta dinâmica do Render
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://*:{port}");
 
 app.Run();
