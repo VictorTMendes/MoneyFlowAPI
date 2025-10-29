@@ -67,7 +67,10 @@ var app = builder.Build();
 
 // Forçar Swagger mesmo em produção
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MoneyFlowAPI v1");
+});
 
 // Redirecionamento HTTPS (Render usa HTTP interno, mas aceita HTTPS externo)
 app.UseHttpsRedirection();
@@ -82,5 +85,7 @@ app.MapControllers();
 // Suporte à porta dinâmica do Render
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://*:{port}");
+
+app.MapGet("/", () => "API do MoneyFlow rodando! Acesse /swagger para ver a documentação.");
 
 app.Run();
