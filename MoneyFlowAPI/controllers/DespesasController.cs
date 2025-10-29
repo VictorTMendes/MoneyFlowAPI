@@ -42,9 +42,17 @@ namespace MoneyFlowAPI.Controllers
         [Authorize]
         public async Task<IActionResult> Create(Despesa despesa)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            despesa.UsuarioId = userId;
+            var userId = GetUsuarioId();
 
+            if (userId == 0)
+                return Unauthorized("Usuário não autenticado.");
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            despesa.UsuarioId = userId;
             _context.Despesas.Add(despesa);
             await _context.SaveChangesAsync();
 

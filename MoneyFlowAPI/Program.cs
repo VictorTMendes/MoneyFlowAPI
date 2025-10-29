@@ -47,7 +47,8 @@ builder.Services.AddCors(options =>
             "http://localhost:5500",
             "https://moneyflowweb.somee.com", // Produção
             "http://moneyflowweb.somee.com",
-            "https://projeto-integrado-multidisciplinar.vercel.app/"// Produção
+            "https://projeto-integrado-multidisciplinar.vercel.app/",
+            "http://projeto-integrado-multidisciplinar.vercel.app/"// Produção 
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
@@ -58,7 +59,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
     });
 
 // Swagger

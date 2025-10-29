@@ -4,11 +4,12 @@ namespace MoneyFlowAPI.Models
     {
         public int Id { get; set; }
         public decimal Valor { get; set; }
+        public string Descricao { get; set; } = string.Empty;
         public DateTime DataDespesa { get; set; } = DateTime.Now;
-        public string CategoriaId { get; set; } = string.Empty;
+        public int CategoriaId { get; set; }
 
-        // Relação com o usuário
+
         public int UsuarioId { get; set; }
-        public Usuario Usuario { get; set; }
+        public Usuario? Usuario { get; set; }
     }
 }
