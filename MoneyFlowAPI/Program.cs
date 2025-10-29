@@ -46,7 +46,8 @@ builder.Services.AddCors(options =>
             "http://127.0.0.1:5500",
             "http://localhost:5500",
             "https://moneyflowweb.somee.com", // Produção
-            "http://moneyflowweb.somee.com" // Produção
+            "http://moneyflowweb.somee.com",
+            "https://projeto-integrado-multidisciplinar.vercel.app/"// Produção
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
