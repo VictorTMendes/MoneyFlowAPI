@@ -1,0 +1,13 @@
+
+.link-voltar {
+    background: none;
+    border: none;
+    color: #5DD62C; 
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+}
+
+.transacao-valor .entrada { color: #5DD62C; }
+.transacao-valor .saida { color: #e45454; }

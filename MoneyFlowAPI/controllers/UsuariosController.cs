@@ -19,8 +19,8 @@ namespace MoneyFlowAPI.Controllers
             _tokenService = tokenService;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(Usuario usuario)
+        [HttpPost("registrar")]
+        public async Task<IActionResult> Registrar(Usuario usuario)
         {
             if (await _context.Usuarios.AnyAsync(u => u.Email == usuario.Email))
                 return BadRequest("Email já cadastrado.");
