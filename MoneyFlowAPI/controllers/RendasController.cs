@@ -31,7 +31,9 @@ namespace MoneyFlowAPI.Controllers
         {
             var usuarioId = GetUsuarioId();
             var rendas = await _context.Rendas
+                .Include(r => r.CategoriaId) // ← IMPORTANTE: Inclui categoria
                 .Where(r => r.UsuarioId == usuarioId)
+                .OrderByDescending(r => r.Data)
                 .ToListAsync();
 
             return Ok(rendas);
@@ -41,21 +43,47 @@ namespace MoneyFlowAPI.Controllers
         [Authorize]
         public async Task<IActionResult> Create(Renda renda)
         {
-            var userId = GetUsuarioId();
+            var usuarioId = GetUsuarioId();
 
-            if (userId == 0)
-                return Unauthorized("Usuário não autenticado.");
+            if (usuarioId == 0)
+            {
+                return Unauthorized("Usuário não identificado.");
+            }
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage);
+                return BadRequest(new { errors });
             }
 
-            renda.UsuarioId = userId;
+            if (string.IsNullOrWhiteSpace(renda.Descricao))
+            {
+                return BadRequest("Descrição é obrigatória.");
+            }
+
+            if (renda.Valor <= 0)
+            {
+                return BadRequest("Valor deve ser maior que zero.");
+            }
+
+            if (renda.CategoriaId <= 0)
+            {
+                return BadRequest("Categoria inválida.");
+            }
+
+            renda.UsuarioId = usuarioId;
+
             _context.Rendas.Add(renda);
             await _context.SaveChangesAsync();
 
-            return Ok(renda);
+            // Recarrega com a categoria incluída
+            var rendaCriada = await _context.Rendas
+                .Include(r => r.CategoriaId)
+                .FirstOrDefaultAsync(r => r.Id == renda.Id);
+
+            return Ok(rendaCriada);
         }
 
         [HttpPut("{id}")]
@@ -69,10 +97,12 @@ namespace MoneyFlowAPI.Controllers
                 return NotFound("Renda não encontrada.");
 
             rendaExistente.Valor = renda.Valor;
+            rendaExistente.Descricao = renda.Descricao;
             rendaExistente.Data = renda.Data;
             rendaExistente.CategoriaId = renda.CategoriaId;
 
             await _context.SaveChangesAsync();
+
             return Ok(new { message = "Renda atualizada com sucesso!" });
         }
 
