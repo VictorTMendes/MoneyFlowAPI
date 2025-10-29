@@ -45,7 +45,8 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
             "http://127.0.0.1:5500",
             "http://localhost:5500",
-            "http://moneyflowweb.somee.com/" // Produção
+            "https://moneyflowweb.somee.com", // Produção
+            "http://moneyflowweb.somee.com" // Produção
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
@@ -83,8 +84,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Suporte à porta dinâmica do Render
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Urls.Add($"http://*:{port}");
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+{
+    app.Urls.Add($"http://*:{port}");
+}
 
 app.MapGet("/", () => "API do MoneyFlow rodando! Acesse /swagger para ver a documentação.");
 
