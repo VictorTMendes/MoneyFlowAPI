@@ -31,7 +31,7 @@ namespace MoneyFlowAPI.Controllers
         {
             var usuarioId = GetUsuarioId();
             var despesas = await _context.Despesas
-                .Include(d => d.CategoriaId) // ← IMPORTANTE: Inclui categoria
+                .Include(r => r.Categoria) // ← IMPORTANTE: Inclui categoria
                 .Where(d => d.UsuarioId == usuarioId)
                 .OrderByDescending(d => d.DataDespesa)
                 .ToListAsync();
@@ -80,7 +80,7 @@ namespace MoneyFlowAPI.Controllers
 
             // Recarrega com a categoria incluída
             var despesaCriada = await _context.Despesas
-                .Include(d => d.CategoriaId)
+                .Include(r => r.Categoria)
                 .FirstOrDefaultAsync(d => d.Id == despesa.Id);
 
             return Ok(despesaCriada);

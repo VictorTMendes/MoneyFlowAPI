@@ -7,6 +7,7 @@ namespace MoneyFlowAPI.Models
         public string Descricao { get; set; } = string.Empty;
         public DateTime DataDespesa { get; set; } = DateTime.Now;
         public int CategoriaId { get; set; }
+        public Categoria? Categoria { get; set; }
 
 
         public int UsuarioId { get; set; }

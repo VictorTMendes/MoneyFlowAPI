@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MoneyFlowAPI.Models
 {
@@ -12,5 +13,8 @@ namespace MoneyFlowAPI.Models
 
         [MaxLength(255)]
         public string? Descricao { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Renda> Rendas { get; set; } = new List<Renda>();
     }
 }
