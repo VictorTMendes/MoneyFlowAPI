@@ -40,18 +40,12 @@ builder.Services.AddAuthentication(options =>
 // Configurar CORS para o frontend hospedado
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins(
-            "http://127.0.0.1:5500",
-            "http://localhost:5500",
-            "https://moneyflowweb.somee.com", // Produção
-            "http://moneyflowweb.somee.com",
-            "https://projeto-integrado-multidisciplinar.vercel.app/",
-            "http://projeto-integrado-multidisciplinar.vercel.app/"// Produção 
-        )
-        .AllowAnyHeader()
-        .AllowAnyMethod();
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
@@ -79,7 +73,7 @@ app.UseSwaggerUI(c =>
 app.UseHttpsRedirection();
 
 // CORS e autenticação
-app.UseCors("AllowFrontend");
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
