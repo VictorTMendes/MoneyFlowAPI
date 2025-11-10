@@ -37,7 +37,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Configurar CORS para o frontend hospedado
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -49,7 +48,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configurar Controllers e JSON
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -62,30 +60,34 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Forçar Swagger mesmo em produção
+// CORS precisa vir ANTES de qualquer outra coisa
+app.UseCors("AllowAll");
+
+// Swagger (pode vir logo depois)
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "MoneyFlowAPI v1");
 });
 
-// Redirecionamento HTTPS (Render usa HTTP interno, mas aceita HTTPS externo)
+// HTTPS redirection (Render faz proxy, então pode manter)
 app.UseHttpsRedirection();
 
-// CORS e autenticação
-app.UseCors("AllowAll");
+// Autenticação e autorização
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Mapear controllers
 app.MapControllers();
 
-// Suporte à porta dinâmica do Render
+// Endpoint base
+app.MapGet("/", () => "API do MoneyFlow rodando! Acesse /swagger para ver a documentação.");
+
+// Porta dinâmica do Render
 var port = Environment.GetEnvironmentVariable("PORT");
 if (!string.IsNullOrEmpty(port))
 {
     app.Urls.Add($"http://*:{port}");
 }
-
-app.MapGet("/", () => "API do MoneyFlow rodando! Acesse /swagger para ver a documentação.");
 
 app.Run();
