@@ -65,5 +65,32 @@ namespace MoneyFlowAPI.Controllers
                 token
             });
         }
+
+        [HttpDelete("excluir/{id}")]
+        public async Task<IActionResult> ExcluirConta(int id)
+        {
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null)
+                return NotFound("Usuário não encontrado.");
+
+            // Carrega rendas e despesas do usuário
+            var rendas = await _context.Rendas.Where(r => r.UsuarioId == id).ToListAsync();
+            var despesas = await _context.Despesas.Where(d => d.UsuarioId == id).ToListAsync();
+
+            // Exclui todas as rendas e despesas relacionadas
+            _context.Rendas.RemoveRange(rendas);
+            _context.Despesas.RemoveRange(despesas);
+
+            //// Se você criou tokens de redefinição de senha
+            //var tokens = await _context.PasswordResetTokens.Where(t => t.UsuarioId == id).ToListAsync();
+            //_context.PasswordResetTokens.RemoveRange(tokens);
+
+            // Exclui o usuário
+            _context.Usuarios.Remove(usuario);
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Conta e todos os dados relacionados foram excluídos com sucesso.");
+        }
     }
 }

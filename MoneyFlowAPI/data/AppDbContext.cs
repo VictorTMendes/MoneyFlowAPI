@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MoneyFlowAPI.Models;
 
 namespace MoneyFlowAPI.Data
@@ -11,5 +11,11 @@ namespace MoneyFlowAPI.Data
         public DbSet<Despesa> Despesas { get; set; }
         public DbSet<Renda> Rendas { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

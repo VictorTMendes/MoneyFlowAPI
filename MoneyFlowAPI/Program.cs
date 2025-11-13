@@ -11,8 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
 // Adicionar TokenService
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<MoneyFlowAPI.services.EmailService>();
 
 // Configurar JWT
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
