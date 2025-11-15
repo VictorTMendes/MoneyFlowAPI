@@ -41,7 +41,7 @@ namespace MoneyFlowAPI.Controllers
             _context.PasswordResetTokens.Add(resetToken);
             await _context.SaveChangesAsync();
 
-            var link = $"https://projeto-integrado-multidisciplinar.vercel.app/esqueci-senha?token={token}";
+            var link = $"https://projeto-integrado-multidisciplinar.vercel.app/src/pages/login/nova-senha.html?token={token}";
             var mensagem = $@"
                 <h3>Recuperação de Senha - MoneyFlow</h3>
                 <p>Olá, {usuario.Nome}!</p>

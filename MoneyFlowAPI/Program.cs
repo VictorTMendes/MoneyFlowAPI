@@ -62,17 +62,16 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// CORS precisa vir ANTES de qualquer outra coisa
 app.UseCors("AllowAll");
 
-// Swagger (pode vir logo depois)
+// Swagger 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "MoneyFlowAPI v1");
 });
 
-// HTTPS redirection (Render faz proxy, então pode manter)
+// HTTPS redirection 
 app.UseHttpsRedirection();
 
 // Autenticação e autorização
@@ -83,7 +82,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Endpoint base
-app.MapGet("/", () => "API do MoneyFlow rodando! Acesse /swagger para ver a documentação.");
+app.MapGet("/", () => "API MoneyFlow rodando! Acesse /swagger para ver a documentação.");
 
 // Porta dinâmica do Render
 var port = Environment.GetEnvironmentVariable("PORT");
